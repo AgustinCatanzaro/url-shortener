@@ -17,12 +17,8 @@ app.use(
 	cors({
 		origin: '*',
 		methods: 'POST, GET',
-		// credentials: true,
-		// allowedHeaders: 'Content-Type',
-		// preflightContinue: false,
 	})
 )
-// app.set('trust proxy', 1)
 
 app.use('/public', express.static(`${process.cwd()}/public`))
 
@@ -34,12 +30,7 @@ app.get('/', function (req, res) {
 	res.sendFile(process.cwd() + '/views/index.html')
 })
 
-// Your first API endpoint
-app.get('/api/hello', function (req, res) {
-	res.json({ greeting: 'hello API' })
-})
-
-app.use('/api/shorturl', urlShortenerRouter)
+app.use('/api/shorturl', express.urlencoded(), urlShortenerRouter)
 
 //error handlers
 app.use(notFoundMiddleware)
