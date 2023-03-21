@@ -4,6 +4,6 @@ const router = express.Router()
 const { urlShortener, getShortUrl } = require('../controllers/url-shortener')
 
 router.route('/').post(urlShortener)
-router.route('/:shortref').get(getShortUrl)
+router.route('/:short_url').get(getShortUrl)
 
 module.exports = router
