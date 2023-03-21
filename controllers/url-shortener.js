@@ -7,6 +7,11 @@ const urlShortener = (req, res) => {
 
 	const parsedUrl = new URL(requestedUrl)
 
+	//blocking the url if comes with params
+	if (parsedUrl.search) {
+		return res.status(StatusCodes.BAD_REQUEST).json({ error: 'invalid url' })
+	}
+
 	//before accessing db need to check if the request url is a valid one/exists.
 	dns.lookup(parsedUrl.hostname, async (err) => {
 		if (!err) {
