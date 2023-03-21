@@ -10,9 +10,10 @@ const urlShortener = (req, res) => {
 	//before accessing db need to check if the request url is a valid one/exists.
 	dns.lookup(parsedUrl.hostname, async (err) => {
 		if (!err) {
+			console.log(req.body.url)
 			//checking if the url exists in the db
 			const dbUrl = await UrlDB.findOne({
-				url: parsedUrl.origin,
+				url: req.body.url,
 			})
 			//if the url already exists in the db, we send it back and its short url reference.
 			if (dbUrl) {
@@ -31,7 +32,7 @@ const urlShortener = (req, res) => {
 
 				//we create a new entry in the db with the received url and the  HighestReference in the db +1
 				await UrlDB.create({
-					url: parsedUrl.origin,
+					url: req.body.url,
 					shortref: greatestShortref,
 				})
 				console.log(
@@ -39,19 +40,19 @@ const urlShortener = (req, res) => {
 				)
 				//we send a response with the url and the reference saved in the db
 				res.status(StatusCodes.OK).json({
-					original_url: parsedUrl.origin,
+					original_url: req.body.url,
 					short_url: greatestShortref,
 				})
 			}
 		} else {
 			//if the url is invalid/doesnt exists we send an error response.
-			res.status(StatusCodes.BAD_REQUEST).json({ error: 'Invalid Hostname' })
+			res.status(StatusCodes.BAD_REQUEST).json({ error: 'invalid url' })
 		}
 	})
 }
 
 const getShortUrl = async (req, res) => {
-	const { shortref: receivedReference } = req.params
+	const { short_url: receivedReference } = req.params
 	const dbRef = await UrlDB.findOne({
 		shortref: receivedReference,
 	})
