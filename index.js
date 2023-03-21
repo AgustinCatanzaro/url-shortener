@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
 const app = express()
@@ -13,12 +14,8 @@ const errorHandlerMiddleware = require('./middleware/error-handler')
 //init
 
 app.use(express.json())
-app.use(
-	cors({
-		origin: '*',
-		methods: 'POST, GET',
-	})
-)
+app.use(express.urlencoded())
+app.use(cors())
 
 app.use('/public', express.static(`${process.cwd()}/public`))
 
@@ -30,7 +27,7 @@ app.get('/', function (req, res) {
 	res.sendFile(process.cwd() + '/views/index.html')
 })
 
-app.use('/api/shorturl', express.urlencoded(), urlShortenerRouter)
+app.use('/api/shorturl', urlShortenerRouter)
 
 //error handlers
 app.use(notFoundMiddleware)
