@@ -22,9 +22,9 @@ const urlShortener = (req, res) => {
 			})
 			//if the url already exists in the db, we send it back and its short url reference.
 			if (dbUrl) {
-				const { url: originalUrl, shortref: assignedRef } = dbUrl
+				const { shortref: assignedRef } = dbUrl
 				res.status(StatusCodes.OK).json({
-					original_url: originalUrl,
+					original_url: req.body.url,
 					short_url: assignedRef,
 				})
 			} else {
